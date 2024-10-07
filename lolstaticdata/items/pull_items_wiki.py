@@ -284,7 +284,7 @@ class WikiItem:
             cooldown_reduction=CooldownReduction(percent=cooldown),
             critical_strike_chance=CriticalStrikeChance(percent=cls._parse_float(crit)),
             gold_per_10=GoldPer10(flat=cls._parse_float(0.0)),
-            heal_and_shield_power=HealAndShieldPower(flat=cls._parse_float(0.0)),
+            heal_and_shield_power=HealAndShieldPower(percent=cls._parse_float(0.0)),
             health=health,
             health_regen=HealthRegen(flat=cls._parse_float(0.0)),
             lethality=Lethality(flat=lethal),
@@ -396,7 +396,7 @@ class WikiItem:
                 cooldown_reduction=CooldownReduction(percent=cls._parse_float(0.0)),
                 critical_strike_chance=CriticalStrikeChance(percent=cls._parse_float(crit)),
                 gold_per_10=GoldPer10(flat=cls._parse_float(gp10)),
-                heal_and_shield_power=HealAndShieldPower(flat=cls._parse_float(hsp)),
+                heal_and_shield_power=HealAndShieldPower(percent=cls._parse_float(hsp)),
                 health=Health(flat=cls._parse_float(hp)),
                 health_regen=HealthRegen(
                     flat=cls._parse_float(hp5flat),
@@ -550,7 +550,7 @@ class WikiItem:
             cooldown_reduction=CooldownReduction(percent=cls._parse_float(0.0)),
             critical_strike_chance=CriticalStrikeChance(percent=cls._parse_float(crit)),
             gold_per_10=GoldPer10(flat=cls._parse_float(gp10)),
-            heal_and_shield_power=HealAndShieldPower(flat=cls._parse_float(hsp)),
+            heal_and_shield_power=HealAndShieldPower(percent=cls._parse_float(hsp)),
             health=Health(flat=cls._parse_float(hp)),
             health_regen=HealthRegen(
                 flat=cls._parse_float(hp5flat),
