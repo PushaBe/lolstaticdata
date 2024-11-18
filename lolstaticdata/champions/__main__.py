@@ -26,6 +26,7 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--directory', '-d', type=str, help='Path to the data directory.')
+    parser.add_argument('--version', '-v', type=str, help='Patch version')
     args = parser.parse_args()
 
     handler = LolWikiDataHandler(use_cache=False)
@@ -34,9 +35,13 @@ def main():
         os.mkdir(os.path.join(directory, "champions"))
 
     # Load some information for pulling champion ability icons
-    latest_version = utils.get_latest_patch_version()
+    if args.version == 'latest':
+      dd_version = utils.get_latest_patch_version()
+    else:
+      dd_version = utils.get_dd_version(args.version)
+
     ddragon_champions = utils.download_json(
-        f"http://ddragon.leagueoflegends.com/cdn/{latest_version}/data/en_US/championFull.json"
+        f"http://ddragon.leagueoflegends.com/cdn/{dd_version}/data/en_US/championFull.json"
     )["data"]
 
     # Load a list of champions from universe.leagueoflegends.com => added request fail detection because of unreliable source
@@ -66,12 +71,12 @@ def main():
         # Load some information for pulling champion ability icons
         ddragon_champion = ddragon_champions[champion.key]
         ability_icon_filenames = get_ability_filenames(
-            f"http://raw.communitydragon.org/latest/game/assets/characters/{champion.key.lower()}/hud/icons2d/"
+            f"http://raw.communitydragon.org/{args.version}/game/assets/characters/{champion.key.lower()}/hud/icons2d/"
         )
 
         # Set the champion icon
         champion.icon = (
-            f"http://ddragon.leagueoflegends.com/cdn/{latest_version}/img/champion/{ddragon_champion['image']['full']}"
+            f"http://ddragon.leagueoflegends.com/cdn/{dd_version}/img/champion/{ddragon_champion['image']['full']}"
         )
 
         # Set the lore
@@ -92,7 +97,7 @@ def main():
                     ability_key_to_identifier[ability_key],
                     ability_index,
                     ability.name,
-                    latest_version,
+                    dd_version,
                     ddragon_champion,
                     ability_icon_filenames,
                 )
