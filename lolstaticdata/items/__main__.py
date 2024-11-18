@@ -22,11 +22,14 @@ def main():
 
     if not os.path.exists(os.path.join(directory, "__wiki__")):
         os.mkdir(os.path.join(directory, "__wiki__"))
-    cdragon = DragonItem.get_cdragon(args.version)
-    ddragon_json = DragonItem.get_json_ddragon(args.version)
+
+    drag_item = DragonItem(args.version)
+    cdragon = drag_item.get_cdragon()
+    ddragon_json = drag_item.get_json_ddragon()
     wikiItems = get_item_urls(False)
 
     jsons = {}
+    
     for name, data in wikiItems.items():
         item = None
         print(name)
@@ -34,8 +37,8 @@ def main():
 
         for i in l:
 
-            cdrag_item = DragonItem.get_item_cdragon(i)
-            wiki_item = WikiItem._parse_item_data(data,name,wikiItems)
+            cdrag_item = drag_item.get_item_cdragon(i)
+            wiki_item = WikiItem._parse_item_data(data, name, wikiItems)
             item = wiki_item
             item.icon = cdrag_item.icon
             item.id = int(cdrag_item.id)

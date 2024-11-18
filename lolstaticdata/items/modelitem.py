@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from dataclasses import dataclass
 import dataclasses_json
 import json
@@ -156,6 +156,7 @@ class Item(object):
     stats: Stats
     shop: Shop
     iconOverlay: str
+    itemlimits: List[Optional[str]]
 
     def __json__(self, *args, **kwargs):
         # Use dataclasses_json to get the dict

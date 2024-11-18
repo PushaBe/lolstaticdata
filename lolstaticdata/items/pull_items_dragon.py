@@ -11,15 +11,23 @@ def get_latest_version():
     j = download_json(url, use_cache=False)
     return j[0]
 
+def get_dd_version(community_version):
+  url = "http://ddragon.leagueoflegends.com/api/versions.json"
+  j = download_json(url, use_cache=False)
+  return max([x for x in j if community_version in x])
+
 
 class DragonItem:
-    latest_version = get_latest_version()
-
     def __init__(self, version):
       if version == 'latest':
+        latest_version = get_latest_version()
+        self.dd_version = latest_version
+        # Remove the patch
         self.version = '.'.join(latest_version.split(".")[:-1])
       else:
         self.version = version
+        # Also has a patch
+        self.dd_version = get_dd_version(version)
 
     def get_cdragon(self):  # cdragon to list
 
@@ -80,6 +88,7 @@ class DragonItem:
             iconOverlay=None,
             maps=[],
             tags=[],
+            itemlimits=[]
         )
         return item
 
@@ -100,12 +109,12 @@ class DragonItem:
 
     def get_json_ddragon(self):  # Main Function, gets items from ddragon, compares them with cdragon and then gets the items from the wiki
         # I didn't want make a request to cdragon for every item
-        url = f"http://ddragon.leagueoflegends.com/cdn/{self.version}/data/en_US/item.json"
+        url = f"http://ddragon.leagueoflegends.com/cdn/{self.dd_version}/data/en_US/item.json"
         p = download_json(url, use_cache=True)
         return p["data"]
 
     def get_ddragon(self, ddragon: int, p: dict):
-        baseurl = f"http://ddragon.leagueoflegends.com/cdn/{self.version}/img/item/"
+        baseurl = f"http://ddragon.leagueoflegends.com/cdn/{self.dd_version}/img/item/"
         icon = baseurl + p[ddragon]["image"]["full"]
         plaintext = p[ddragon]["plaintext"]  # simple description
         purchasable = p[ddragon]["gold"]["purchasable"]  # is this purchasable or is it upgraded (seraph's embrace)

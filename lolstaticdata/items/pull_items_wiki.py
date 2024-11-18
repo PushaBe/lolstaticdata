@@ -707,6 +707,15 @@ class WikiItem:
             if "ORNN" in item_data["limit"].upper():
                 print(item_data["limit"])
                 ornn = True
+                
+        # Collect all the item limits
+        itemlimits = []
+        limit_name = 'itemlimit'
+        i = 1
+        while limit_name in item_data:
+          itemlimits.append(item_data[limit_name])
+          limit_name = f'itemlimit{i}'
+          i += 1
 
         if "buy" in item_data:
             buy = item_data["buy"]
@@ -743,6 +752,7 @@ class WikiItem:
             iconOverlay=ornn,
             maps=[],
             tags=[],
+            itemlimits=itemlimits
         )
         return item
 
