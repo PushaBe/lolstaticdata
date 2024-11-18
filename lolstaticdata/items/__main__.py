@@ -10,6 +10,7 @@ from collections import OrderedDict
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--directory', '-d', type=str, help='Path to the data directory.')
+    parser.add_argument('--version', '-v', type=str, help='Patch version')
     args = parser.parse_args()
 
     directory = os.path.abspath(args.directory)
@@ -21,8 +22,8 @@ def main():
 
     if not os.path.exists(os.path.join(directory, "__wiki__")):
         os.mkdir(os.path.join(directory, "__wiki__"))
-    cdragon = DragonItem.get_cdragon()
-    ddragon_json = DragonItem.get_json_ddragon()
+    cdragon = DragonItem.get_cdragon(args.version)
+    ddragon_json = DragonItem.get_json_ddragon(args.version)
     wikiItems = get_item_urls(False)
 
     jsons = {}
@@ -49,7 +50,7 @@ def main():
             item.tags = ddragon_json[str(cdrag_item.id)]['tags']
             if item.iconOverlay == True:
                 item.iconOverlay = (
-                    "http://raw.communitydragon.org/latest/game/data/items/icons2d/bordertreatmentornn.png"
+                    "http://raw.communitydragon.org/{}/game/data/items/icons2d/bordertreatmentornn.png".format(args.version)
                 )
             else:
                 item.iconOverlay = False
