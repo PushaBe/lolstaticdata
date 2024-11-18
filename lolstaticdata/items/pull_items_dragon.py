@@ -11,36 +11,44 @@ def get_latest_version():
     j = download_json(url, use_cache=False)
     return j[0]
 
+def get_dd_version(community_version):
+  url = "http://ddragon.leagueoflegends.com/api/versions.json"
+  j = download_json(url, use_cache=False)
+  return max([x for x in j if community_version in x])
+
 
 class DragonItem:
-    latest_version = get_latest_version()
-    version = latest_version.split(".")
-    version = str(version[0]) + "." + str(version[1])
+    def __init__(self, version):
+      if version == 'latest':
+        latest_version = get_latest_version()
+        self.dd_version = latest_version
+        # Remove the patch
+        self.version = '.'.join(latest_version.split(".")[:-1])
+      else:
+        self.version = version
+        # Also has a patch
+        self.dd_version = get_dd_version(version)
 
-    @staticmethod
-    def get_cdragon():  # cdragon to list
+    def get_cdragon(self):  # cdragon to list
 
-        url = f"https://raw.communitydragon.org/{DragonItem.version}/plugins/rcp-be-lol-game-data/global/default/v1/items.json"
+        url = f"https://raw.communitydragon.org/{self.version}/plugins/rcp-be-lol-game-data/global/default/v1/items.json"
 
         j = download_json(url, use_cache=False)
         cdragon = [i for i in j if str(i["id"])]
         return cdragon
 
-    @staticmethod
-    def get_item_plaintext(item):
-        if DragonItem.version <= "14.14":
-          url = f"https://raw.communitydragon.org/{DragonItem.version}/game/en_us/data/menu/en_us/main.stringtable.json"
+    def get_item_plaintext(self, item):
+        if self.version <= "14.14":
+          url = f"https://raw.communitydragon.org/{self.version}/game/en_us/data/menu/en_us/main.stringtable.json"
         else:
-          url = f"https://raw.communitydragon.org/{DragonItem.version}/game/en_us/data/menu/en_us/lol.stringtable.json"
+          url = f"https://raw.communitydragon.org/{self.version}/game/en_us/data/menu/en_us/lol.stringtable.json"
         j = download_json(url, use_cache=True)
         try:
             return j['entries']["game_item_plaintext_" + str(item)]
         except:
             return None
 
-    @classmethod
-    def get_item_cdragon(cls, cdrag):
-
+    def get_item_cdragon(self, cdrag):
         builds_from = []
         builds_to = []
         ally = None
@@ -56,12 +64,12 @@ class DragonItem:
         purchasable = cdrag["inStore"]
         cdragid = cdrag["id"]
         icon = cdrag["iconPath"]
-        plaintext = cls.get_item_plaintext(cdragid)
+        plaintext = self.get_item_plaintext(cdragid)
         shop = Shop(purchasable=purchasable, prices=[], tags=[])
         item = Item(
             builds_from=builds_from,
             builds_into=builds_to,
-            icon=cls._get_skin_path(icon),
+            icon=self._get_skin_path(icon),
             name="",
             id=cdragid,
             tier=[],
@@ -80,11 +88,11 @@ class DragonItem:
             iconOverlay=None,
             maps=[],
             tags=[],
+            itemlimits=[]
         )
         return item
 
-    @classmethod
-    def _get_skin_path(cls, path):
+    def _get_skin_path(self, path):
 
         if path is not None:
 
@@ -92,28 +100,21 @@ class DragonItem:
                 path = path.split("ASSETS")[1]
                 path = path.lower()
                 path = (
-                    "https://raw.communitydragon.org/{}/plugins/rcp-be-lol-game-data/global/default/assets".format(
-                        DragonItem.version
-                    )
+                    f"https://raw.communitydragon.org/{self.version}/plugins/rcp-be-lol-game-data/global/default/assets"
                     + path
                 )
                 return path
         else:
             return None
 
-    @classmethod
-    def get_json_ddragon(
-        cls,
-    ):  # Main Function, gets items from ddragon, compares them with cdragon and then gets the items from the wiki
+    def get_json_ddragon(self):  # Main Function, gets items from ddragon, compares them with cdragon and then gets the items from the wiki
         # I didn't want make a request to cdragon for every item
-        url = "http://ddragon.leagueoflegends.com/cdn/{}/data/en_US/item.json".format(get_latest_version())
+        url = f"http://ddragon.leagueoflegends.com/cdn/{self.dd_version}/data/en_US/item.json"
         p = download_json(url, use_cache=True)
         return p["data"]
 
-    @classmethod
-    def get_ddragon(cls, ddragon: int, p: dict):
-        # print(ddragon)
-        baseurl = "http://ddragon.leagueoflegends.com/cdn/{}/img/item/".format(get_latest_version())  # icon base url
+    def get_ddragon(self, ddragon: int, p: dict):
+        baseurl = f"http://ddragon.leagueoflegends.com/cdn/{self.dd_version}/img/item/"
         icon = baseurl + p[ddragon]["image"]["full"]
         plaintext = p[ddragon]["plaintext"]  # simple description
         purchasable = p[ddragon]["gold"]["purchasable"]  # is this purchasable or is it upgraded (seraph's embrace)

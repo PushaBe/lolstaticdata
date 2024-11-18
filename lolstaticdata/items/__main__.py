@@ -10,6 +10,7 @@ from collections import OrderedDict
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--directory', '-d', type=str, help='Path to the data directory.')
+    parser.add_argument('--version', '-v', type=str, help='Patch version')
     args = parser.parse_args()
 
     directory = os.path.abspath(args.directory)
@@ -21,11 +22,14 @@ def main():
 
     if not os.path.exists(os.path.join(directory, "__wiki__")):
         os.mkdir(os.path.join(directory, "__wiki__"))
-    cdragon = DragonItem.get_cdragon()
-    ddragon_json = DragonItem.get_json_ddragon()
+
+    drag_item = DragonItem(args.version)
+    cdragon = drag_item.get_cdragon()
+    ddragon_json = drag_item.get_json_ddragon()
     wikiItems = get_item_urls(False)
 
     jsons = {}
+    
     for name, data in wikiItems.items():
         item = None
         print(name)
@@ -33,8 +37,8 @@ def main():
 
         for i in l:
 
-            cdrag_item = DragonItem.get_item_cdragon(i)
-            wiki_item = WikiItem._parse_item_data(data,name,wikiItems)
+            cdrag_item = drag_item.get_item_cdragon(i)
+            wiki_item = WikiItem._parse_item_data(data, name, wikiItems)
             item = wiki_item
             item.icon = cdrag_item.icon
             item.id = int(cdrag_item.id)
@@ -49,7 +53,7 @@ def main():
             item.tags = ddragon_json[str(cdrag_item.id)]['tags']
             if item.iconOverlay == True:
                 item.iconOverlay = (
-                    "http://raw.communitydragon.org/latest/game/data/items/icons2d/bordertreatmentornn.png"
+                    "http://raw.communitydragon.org/{}/game/data/items/icons2d/bordertreatmentornn.png".format(args.version)
                 )
             else:
                 item.iconOverlay = False
