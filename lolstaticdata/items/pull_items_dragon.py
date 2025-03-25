@@ -14,7 +14,7 @@ def get_latest_version():
 
 class DragonItem:
     def __init__(self, version):
-      if version == 'latest':
+      if not version or version == 'latest':
         latest_version = get_latest_version()
         self.dd_version = latest_version
         # Remove the patch

@@ -203,4 +203,7 @@ def get_latest_patch_version():
 def get_dd_version(community_version):
   url = "http://ddragon.leagueoflegends.com/api/versions.json"
   j = download_json(url, use_cache=False)
-  return max([x for x in j if community_version in x if "_" not in x])
+  if community_version == 'latest':
+    return max([x for x in j if '_' not in x])
+  else:
+    return max([x for x in j if community_version in x])
