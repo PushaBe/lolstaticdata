@@ -590,7 +590,8 @@ class WikiItem:
                 percent=cls._parse_float(omnivamp),  # takes omnivamp from
             ),
             ability_haste=AbilityHaste(flat=cls._parse_float(ah)),
-            tenacity=Tenacity(percent=cls._parse_float(tenacity))
+            tenacity=Tenacity(percent=cls._parse_float(tenacity)),
+            critical_strike_damage=CriticalStrikeDamage(percent=cls._parse_float(critdamage))
         )
         return stats
 
