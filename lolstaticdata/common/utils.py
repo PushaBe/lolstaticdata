@@ -199,3 +199,8 @@ def get_latest_patch_version():
     versions = [v for v in versions if "_" not in v]
     versions = natsorted(versions)
     return versions[-1]
+
+def get_dd_version(community_version):
+  url = "http://ddragon.leagueoflegends.com/api/versions.json"
+  j = download_json(url, use_cache=False)
+  return max([x for x in j if community_version in x if "_" not in x])

@@ -1,7 +1,7 @@
 import json
 import os
 
-from ..common.utils import download_json
+from ..common.utils import download_json, get_dd_version
 from .pull_items_wiki import WikiItem
 from .modelitem import Item, Shop
 
@@ -10,11 +10,6 @@ def get_latest_version():
     url = "http://ddragon.leagueoflegends.com/api/versions.json"
     j = download_json(url, use_cache=False)
     return j[0]
-
-def get_dd_version(community_version):
-  url = "http://ddragon.leagueoflegends.com/api/versions.json"
-  j = download_json(url, use_cache=False)
-  return max([x for x in j if community_version in x])
 
 
 class DragonItem:
