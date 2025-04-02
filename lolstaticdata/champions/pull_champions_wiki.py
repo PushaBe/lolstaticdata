@@ -354,11 +354,25 @@ class LolWikiDataHandler:
             roles=sorted(
                 {
                     *(Role.from_string(r) for r in data["role"]),
+                }
+            ),
+            herotype=sorted(
+                {
                     *(
                         Role.from_string(role)
                         for role in (
-                            data.get("herotype"),
-                            data.get("alttype"),
+                            data.get("herotype")
+                        )
+                        if role is not None and role != ""
+                    ),
+                }
+            ),
+            alttype=sorted(
+                {
+                    *(
+                        Role.from_string(role)
+                        for role in (
+                            data.get("alttype")
                         )
                         if role is not None and role != ""
                     ),
