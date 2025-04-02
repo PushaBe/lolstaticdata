@@ -280,6 +280,8 @@ class Champion(object):
     stats: Stats
     positions: List[Position]
     roles: List[Role]
+    herotype: List[Role]
+    alttype: List[Role]
     attribute_ratings: AttributeRatings
     abilities: Mapping[str, List[Ability]]
     release_date: str
