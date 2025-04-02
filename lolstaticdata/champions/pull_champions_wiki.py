@@ -361,7 +361,7 @@ class LolWikiDataHandler:
                     *(
                         Role.from_string(role)
                         for role in (
-                            data.get("herotype")
+                            [data.get("herotype")]
                         )
                         if role is not None and role != ""
                     ),
@@ -372,7 +372,7 @@ class LolWikiDataHandler:
                     *(
                         Role.from_string(role)
                         for role in (
-                            data.get("alttype")
+                           [data.get("alttype")]
                         )
                         if role is not None and role != ""
                     ),
