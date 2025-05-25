@@ -207,6 +207,12 @@ class LolWikiDataHandler:
             else:
                 return False
 
+
+    def remove_comments(self, data):
+        comment_pattern = re.compile(r'--(?![^\"]*\"|[^\']*\'|[^\[]*\[).*')
+        data = [comment_pattern.sub("", line) for line in data]
+        return "".join(data)
+    
     def get_champions(self) -> Iterator[Champion]:
         # Download the page source
         url = "https://wiki.leagueoflegends.com/en-us/Module:ChampionData/data"
@@ -224,11 +230,7 @@ class LolWikiDataHandler:
                 spans[i] = "{"
         split_stuff = re.compile("({)|(})")
         spans = spans[start:]
-        for i, span in enumerate(spans):
-            if span in ["-- </pre>", "-- [[Category:Lua]]"]:
-                spans[i] = ""
-
-        spans = "".join(spans)
+        spans = self.remove_comments(spans)
         data = lua.decode(spans)
 
         # Return the champData as a list of Champions
