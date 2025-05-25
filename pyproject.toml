@@ -1,5 +1,25 @@
-[tool.black]
-line-length = 120
-target-version = ['py37']
-include = '\.pyi?$'
-exclude = ''
+[project]
+name = "lolstaticdata"
+version = "0.1.0"
+classifiers = ["Private :: Do Not Upload"]
+description = "The project which helps to collect static LoL data: items, champions info"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "beautifulsoup4>=4.13.4",
+    "dataclasses-json>=0.6.7",
+    "lxml>=5.4.0",
+    "natsort>=8.4.0",
+    "requests>=2.32.3",
+    "slpp>=1.2.3",
+    "stringcase>=1.2.0",
+    "thefuzz>=0.22.1",
+]
+
+[project.scripts]
+collect-items = "lolstaticdata.items.__main__:main"
+collect-champions = "lolstaticdata.champions.__main__:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
