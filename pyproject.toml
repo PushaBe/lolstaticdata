@@ -16,9 +16,9 @@ dependencies = [
     "thefuzz>=0.22.1",
 ]
 
-# [project.scripts]
-# collect-items = "lolstaticdata.items.__main__:main"
-# collect-champions = "lolstaticdata.champions.__main__:main"
+[project.scripts]
+collect-items = "lolstaticdata.items.__main__:main"
+collect-champions = "lolstaticdata.champions.__main__:main"
 
 [build-system]
 requires = ["hatchling"]
